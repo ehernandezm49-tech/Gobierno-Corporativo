@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gobierno Corporativo</title>
+<meta name="description" content="Presentación interactiva de los componentes teóricos del gobierno corporativo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Concepto: dos lienzos con tableros de componentes; cada componente es un botón que abre su ficha. */
+:root{
+  --bg:#EEF2F6; --surface:#FFFFFF; --surface-2:#E3E9F0; --ink:#0F1B2D; --muted:#4A5A70; --line:#C3CEDB;
+  --accent:#0B6E78; --accent-ink:#FFFFFF; --accent-soft:#D5ECEE;
+  --warm:#7A4F00; --warm-soft:#F6E7C4;
+  --font-display:'Space Grotesk','Segoe UI',Arial,sans-serif;
+  --font-body:'Inter','Segoe UI',Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1424; --surface:#142038; --surface-2:#1B2A47; --ink:#EAF0F8; --muted:#A7B5CB; --line:#2A3B5C;
+    --accent:#5CC7D0; --accent-ink:#06222A; --accent-soft:#17383F;
+    --warm:#E3B04B; --warm-soft:#3A2F14; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1424; --surface:#142038; --surface-2:#1B2A47; --ink:#EAF0F8; --muted:#A7B5CB; --line:#2A3B5C;
+  --accent:#5CC7D0; --accent-ink:#06222A; --accent-soft:#17383F;
+  --warm:#E3B04B; --warm-soft:#3A2F14; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
+.kicker{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(28px,4.2vw,44px);line-height:1.1;font-weight:700}
+.top{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between;margin-bottom:24px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{font:inherit;font-weight:600;font-size:15px;padding:10px 16px;min-height:44px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tab:hover{border-color:var(--accent)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h2{font-size:clamp(22px,3vw,30px);line-height:1.15;font-weight:600}
+.lede{margin:8px 0 22px;max-width:70ch;color:var(--muted)}
+.lede strong{color:var(--ink)}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.group-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.group h3{font-size:20px;line-height:1.15;font-weight:600}
+.count{flex:none;font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--warm-soft);color:var(--warm)}
+.items{display:flex;flex-direction:column;gap:8px}
+.item{font:inherit;font-size:15px;font-weight:500;text-align:left;width:100%;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.item:hover{border-color:var(--accent);background:var(--accent-soft)}
+.item[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.panel{margin-top:16px;background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:clamp(18px,3vw,30px);display:flex;flex-direction:column;gap:18px}
+.panel-kicker{margin:0;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.panel h3{font-size:clamp(24px,3.4vw,34px);line-height:1.1;font-weight:700;margin-top:4px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.cols > div{min-width:0}
+.label{display:inline-block;margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
+.label.def{background:var(--accent-soft);color:var(--accent)}
+.label.mit{background:var(--warm-soft);color:var(--warm)}
+.panel p.txt{margin:0;font-size:17px;max-width:62ch}
+.step{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.step button{font:inherit;font-weight:600;font-size:15px;min-height:44px;padding:8px 16px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.step button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.step .pos{margin-left:auto;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.concl{margin-top:24px;background:var(--accent-soft);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,28px)}
+.concl h2{margin-bottom:14px}
+.concl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.concl-card{background:var(--surface);border-radius:12px;padding:16px 18px;border:1px solid var(--line);min-width:0}
+.concl-card h3{font-size:18px;font-weight:600;color:var(--accent);margin-bottom:6px}
+.concl-card p{margin:0;font-size:16px}
+.foot{margin-top:28px;font-size:14px;color:var(--muted);max-width:90ch}
+.foot a{color:var(--accent);font-weight:600}
+.foot a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){
+  .panel{animation:rise .25s ease both}
+  @keyframes rise{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <p class="kicker">Investigación · Componentes teóricos</p>
+      <h1>Gobierno corporativo</h1>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Lienzos">
+      <button class="tab" role="tab" id="tab1" aria-controls="l1" aria-selected="true" type="button">Lienzo 1 · Mitigador</button>
+      <button class="tab" role="tab" id="tab2" aria-controls="l2" aria-selected="false" type="button">Lienzo 2 · Accionistas y transparencia</button>
+    </div>
+  </div>
+
+  <section id="l1" role="tabpanel" aria-labelledby="tab1">
+    <h2>El gobierno corporativo como mitigador de riesgos</h2>
+    <p class="lede">Cuatro frentes reducen el <strong>riesgo de agencia</strong>, que aparece cuando quien administra no es quien posee la empresa. Selecciona un componente para ver su definición y cómo mitiga el riesgo, o recorre todos con los botones de la ficha.</p>
+    <div class="groups" id="groups1"></div>
+    <article class="panel" id="panel1" aria-live="polite"></article>
+  </section>
+
+  <section id="l2" role="tabpanel" aria-labelledby="tab2" hidden>
+    <h2>Accionistas y transparencia</h2>
+    <p class="lede">Dos pilares sostienen la confianza en la empresa: el <strong>trato justo a quienes aportan el capital</strong> y la <strong>información que reciben</strong> accionistas y demás grupos de interés.</p>
+    <div class="groups" id="groups2"></div>
+    <article class="panel" id="panel2" aria-live="polite"></article>
+    <div class="concl">
+      <h2>Conclusiones</h2>
+      <div class="concl-grid">
+        <div class="concl-card"><h3>Alinear intereses</h3><p>El gobierno corporativo mitiga el riesgo de agencia al alinear a propietarios y gestores mediante reglas, contrapesos y sanciones.</p></div>
+        <div class="concl-card"><h3>Supervisar con criterio</h3><p>Un consejo idóneo, capacitado y con comités supervisa a una gerencia evaluada, bien incentivada y con sucesión definida.</p></div>
+        <div class="concl-card"><h3>Generar confianza</h3><p>El trato equitativo a los accionistas y la transparencia hacia stakeholders sostienen la reputación y el acceso al capital.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">Fuentes:
+    <a href="https://www.oecd.org/es/publications/2023/09/g20-oecd-principles-of-corporate-governance-2023_60836fcb/full-report.html" target="_blank" rel="noopener">Principios de Gobierno Corporativo G20/OCDE (2023)</a> ·
+    <a href="https://www.ifc.org/content/dam/ifc/doc/mgrt/spanish-practical-guide-full.pdf" target="_blank" rel="noopener">IFC, Guía práctica de gobierno corporativo</a> ·
+    Jensen y Meckling (1976), teoría de la agencia.</p>
+</div>
+
+<script>
+var L = {
+  l1: { root: 'groups1', panel: 'panel1', groups: [
+    { name: 'Riesgo de agencia', items: [
+      { n: 'Conflicto de interés', d: 'Ocurre cuando alguien que decide en nombre de la empresa (un gerente o un consejero) tiene un interés propio que puede chocar con el de la empresa y sus dueños. Por ejemplo, contratar como proveedor a un familiar aunque no sea la mejor opción. Aunque la persona no haga nada indebido, el conflicto ya es un riesgo, porque puede nublar su juicio.', m: 'Nace de la separación entre propiedad y gestión descrita por Jensen y Meckling (1976): el agente puede decidir en su propio beneficio y no en el del principal.' },
+      { n: 'Gestión de conflictos', d: 'Son las reglas que fija la empresa para que un conflicto de interés no dañe sus decisiones. Siguen tres pasos: avisar del conflicto, apartarse de la decisión (no opinar ni votar) y dejar que decidan personas sin ese interés, como los consejeros independientes. Si alguien incumple, se aplican sanciones.', m: 'Evita que una decisión se tome bajo influencia personal y deja constancia de que se trató con imparcialidad.' }
+    ]},
+    { name: 'Consejo de Administración', items: [
+      { n: 'Aptitud y honorabilidad', d: 'Son las condiciones mínimas para ser consejero. Aptitud significa tener la capacidad y la preparación para el cargo. Honorabilidad significa tener buena reputación y una conducta íntegra, sin impedimentos legales. Se revisan antes de nombrar a la persona y también cada cierto tiempo.', m: 'Reduce el riesgo de que lleguen al consejo personas sin la solvencia moral o la idoneidad para supervisar.' },
+      { n: 'Actualización y capacitación', d: 'Es la preparación que reciben los consejeros al entrar y mientras ejercen el cargo. Incluye una inducción para conocer la empresa y cursos periódicos sobre finanzas, riesgos, leyes y temas nuevos como la sostenibilidad. El entorno cambia, y un consejero que no se actualiza supervisa con información vieja.', m: 'Mantiene al consejo al nivel de los riesgos emergentes, entre ellos los de sostenibilidad.' },
+      { n: 'Conocimiento y experiencia', d: 'Es la mezcla de conocimientos que debe tener el consejo en conjunto: finanzas, el sector del negocio, leyes y riesgos, entre otros. Ningún consejero lo sabe todo, por eso se buscan perfiles que se complementen y se incluyen consejeros independientes, que aportan una mirada sin vínculos con la empresa.', m: 'Evita decisiones sesgadas por una sola visión y fortalece el criterio independiente.' },
+      { n: 'Comités de gobierno', d: 'Son grupos pequeños dentro del consejo que estudian a fondo un tema y luego informan al consejo completo. Los más comunes son el de auditoría (revisa las cuentas y los controles), el de nominaciones (propone candidatos), el de remuneraciones (revisa los pagos) y el de riesgos.', m: 'Profundizan la supervisión en las áreas más sensibles y reducen la dependencia de la información que entrega la gerencia.' },
+      { n: 'Funcionamiento del CA', d: 'Es la forma en que el consejo trabaja: se reúne en fechas fijas, recibe la información antes de cada sesión, deja actas de lo decidido y se evalúa a sí mismo cada cierto tiempo. También se recomienda que quien preside el consejo no sea quien dirige la empresa, para que exista un contrapeso.', m: 'Asegura que el consejo supervise y no se limite a aprobar lo que propone la gerencia.' }
+    ]},
+    { name: 'Gerencia', items: [
+      { n: 'Eficiencia', d: 'Es lograr los objetivos de la empresa usando bien el dinero, el tiempo y las personas, sin desperdicios. El consejo define la estrategia y la gerencia la ejecuta; la eficiencia mide qué tan bien lo hace con los recursos que tiene.', m: 'Evita pérdidas por mala gestión y permite medir si la gerencia cumple lo acordado.' },
+      { n: 'Evaluación del desempeño', d: 'Es revisar, una vez al año, qué tan bien trabajaron el gerente general y su equipo. Para eso el consejo define antes metas claras y medibles, como ventas, costos o cumplimiento de normas, y luego compara lo logrado con lo esperado.', m: 'Da una base objetiva para premiar, corregir o remover.' },
+      { n: 'Remuneración e incentivos', d: 'La remuneración es lo que se paga a la gerencia: sueldo, bonos y otros beneficios. Los incentivos son pagos extra por cumplir metas. Deben premiar resultados sostenibles en el tiempo y no solo ganancias rápidas, para que los gerentes no tomen riesgos excesivos.', m: 'Alinea el beneficio del gerente con el del accionista y desalienta la toma excesiva de riesgos.' },
+      { n: 'Sanciones', d: 'Son las consecuencias que la empresa establece cuando alguien rompe las reglas, desde un llamado de atención o una multa hasta la salida del cargo. Deben estar escritas de antemano y aplicarse a todos por igual, sin importar el puesto.', m: 'Hace creíbles las reglas y desalienta el oportunismo.' },
+      { n: 'Remoción', d: 'Es el proceso para sacar a un gerente de su puesto cuando no cumple o comete faltas graves. Debe estar definido de antemano: qué causas lo permiten, quién decide y cómo puede defenderse la persona.', m: 'Permite corregir un mal desempeño a tiempo y sin generar una crisis institucional.' },
+      { n: 'Planes de eventos', d: 'Son planes de contingencia: instrucciones para saber qué hacer si ocurre algo grave e inesperado, como un fraude, un ataque informático, un incendio o una crisis de reputación. Dicen quién decide, quién comunica y cómo se sigue operando mientras se resuelve.', m: 'Reduce el impacto de lo inesperado porque define quién decide y cómo se comunica.' }
+    ]},
+    { name: 'Sucesión', items: [
+      { n: 'Políticas de sucesión', d: 'Es el plan para saber quién reemplazará al gerente general y a otros puestos clave cuando se vayan, por retiro, renuncia o emergencia. El consejo lo revisa al menos una vez al año, identifica candidatos y prepara un plan de emergencia por si la salida es repentina.', m: 'Evita el vacío de liderazgo y la dependencia de una sola persona.' }
+    ]}
+  ]},
+  l2: { root: 'groups2', panel: 'panel2', groups: [
+    { name: 'Accionistas', items: [
+      { n: 'Trato equitativo', d: 'Significa que todos los accionistas de una misma clase de acciones tienen los mismos derechos y reciben el mismo trato, tengan mucho o poco capital y sean del país o extranjeros. Evita que quienes mandan en la empresa favorezcan sus propios intereses por encima de los socios pequeños (minoritarios).', m: 'Protege a los minoritarios frente a abusos del accionista de control o de los administradores.' },
+      { n: 'Derechos de accionistas', d: 'Son los poderes que tienen los dueños de la empresa: votar en las juntas, elegir a los miembros del consejo, aprobar cambios importantes y recibir información a tiempo. La empresa debe facilitar el voto, sin trámites difíciles ni costos innecesarios.', m: 'Da a los propietarios un control real sobre quienes administran su capital.' }
+    ]},
+    { name: 'Transparencia', items: [
+      { n: 'Información financiera', d: 'Son los estados financieros (balance, estado de resultados y flujo de efectivo) que muestran cómo le va a la empresa. Deben prepararse con normas reconocidas, ser revisados por un auditor independiente y publicarse a tiempo.', m: 'Permite verificar el desempeño real y detectar manipulaciones.' },
+      { n: 'Divulgación de información', d: 'Es dar a conocer a tiempo todo lo importante de la empresa, no solo las cifras: los resultados, quiénes son los dueños, cómo se gobierna, qué riesgos enfrenta y qué negocios hace con personas relacionadas. Lo importante se comunica y no se oculta.', m: 'Reduce la asimetría de información entre administradores y propietarios.' },
+      { n: 'Transparencia con accionistas', d: 'Es que todos los accionistas reciban la información importante al mismo tiempo y de la misma forma. Así nadie decide con ventaja sobre los demás y se evita el uso de información privilegiada.', m: 'Evita ventajas informativas para unos pocos y refuerza el trato equitativo.' },
+      { n: 'Transparencia con stakeholders', d: 'Los stakeholders son los grupos que se ven afectados por la empresa: clientes, proveedores, empleados, bancos y comunidad. Ser transparente con ellos es informarles con claridad y abrir canales de diálogo, incluso sobre el impacto social y ambiental.', m: 'Fortalece la reputación y la confianza de quienes se relacionan con la empresa.' }
+    ]}
+  ]}
+};
+
+var state = { l1: 0, l2: 0 };
+var refs = {};
+
+function mk(tag, cls, text) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+function flat(k) {
+  var out = [];
+  L[k].groups.forEach(function (g) { g.items.forEach(function (it) { out.push({ g: g, it: it }); }); });
+  return out;
+}
+
+function build(k) {
+  var cfg = L[k], root = document.getElementById(cfg.root), idx = 0;
+  refs[k] = { buttons: [] };
+  cfg.groups.forEach(function (g) {
+    var col = mk('div', 'group');
+    var head = mk('div', 'group-head');
+    head.append(mk('h3', '', g.name), mk('span', 'count', g.items.length + (g.items.length === 1 ? ' componente' : ' componentes')));
+    var list = mk('div', 'items');
+    g.items.forEach(function (it) {
+      var i = idx++;
+      var b = mk('button', 'item', it.n);
+      b.type = 'button';
+      b.addEventListener('click', function () { select(k, i, true); });
+      refs[k].buttons.push(b);
+      list.append(b);
+    });
+    col.append(head, list);
+    root.append(col);
+  });
+  var p = document.getElementById(cfg.panel);
+  var kick = mk('p', 'panel-kicker'), title = mk('h3');
+  var cols = mk('div', 'cols');
+  var d1 = mk('div'), d2 = mk('div');
+  var l1 = mk('span', 'label def', 'Definición'), t1 = mk('p', 'txt');
+  var l2 = mk('span', 'label mit', 'Cómo mitiga el riesgo'), t2 = mk('p', 'txt');
+  d1.append(l1, t1); d2.append(l2, t2); cols.append(d1, d2);
+  var step = mk('div', 'step');
+  var prev = mk('button', '', '← Anterior'), next = mk('button', '', 'Siguiente →'), pos = mk('span', 'pos');
+  prev.type = 'button'; next.type = 'button';
+  var n = flat(k).length;
+  prev.addEventListener('click', function () { select(k, (state[k] - 1 + n) % n, false); });
+  next.addEventListener('click', function () { select(k, (state[k] + 1) % n, false); });
+  step.append(prev, next, pos);
+  p.append(kick, title, cols, step);
+  refs[k].kick = kick; refs[k].title = title; refs[k].t1 = t1; refs[k].t2 = t2; refs[k].pos = pos;
+}
+
+function update(k) {
+  var f = flat(k), cur = f[state[k]], r = refs[k];
+  r.buttons.forEach(function (b, i) { b.setAttribute('aria-pressed', i === state[k] ? 'true' : 'false'); });
+  r.kick.textContent = cur.g.name;
+  r.title.textContent = cur.it.n;
+  r.t1.textContent = cur.it.d;
+  r.t2.textContent = cur.it.m;
+  r.pos.textContent = (state[k] + 1) + ' de ' + f.length;
+}
+
+function select(k, i, fromItem) {
+  state[k] = i;
+  update(k);
+  var small = window.matchMedia('(max-width: 820px)').matches;
+  if (small && fromItem) {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById(L[k].panel).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
+  }
+}
+
+function showCanvas(n, setHash) {
+  var a = document.getElementById('l1'), b = document.getElementById('l2');
+  a.hidden = n !== 1; b.hidden = n !== 2;
+  document.getElementById('tab1').setAttribute('aria-selected', n === 1 ? 'true' : 'false');
+  document.getElementById('tab2').setAttribute('aria-selected', n === 2 ? 'true' : 'false');
+  if (setHash) { try { location.hash = n === 1 ? 'lienzo-1' : 'lienzo-2'; } catch (e) {} }
+}
+
+function fromHash() { return location.hash === '#lienzo-2' ? 2 : 1; }
+
+build('l1'); build('l2'); update('l1'); update('l2');
+document.getElementById('tab1').addEventListener('click', function () { showCanvas(1, true); });
+document.getElementById('tab2').addEventListener('click', function () { showCanvas(2, true); });
+window.addEventListener('hashchange', function () { showCanvas(fromHash(), false); });
+document.addEventListener('keydown', function (e) {
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.key === 'ArrowRight') showCanvas(2, true);
+  if (e.key === 'ArrowLeft') showCanvas(1, true);
+});
+showCanvas(fromHash(), false);
+</script>
+</body>
+</html>
